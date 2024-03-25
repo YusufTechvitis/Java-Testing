@@ -1,0 +1,12 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Dockering...'
+                sh 'sudo docker run -p 81:80 -d --name nginx nginx'
+            }
+        }
+    }
+}
