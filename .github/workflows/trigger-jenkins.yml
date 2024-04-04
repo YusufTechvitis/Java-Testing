@@ -16,11 +16,9 @@ jobs:
 
       - name: Validate Jenkinsfile
         run: |
-          # Check if Jenkinsfile is valid
-          if ! docker run --rm -v $PWD:/workspace -w /workspace jenkins/jenkinsfile-runner:latest sh -c 'cat Jenkinsfile | jenkins-jenkinsfile-runner'; then
-            echo "ERROR: Jenkinsfile is not valid."
-            exit 1
-          fi
+          docker run --rm \
+            -v $PWD:/workspace -w /workspace \
+            jenkins/jenkinsfile-runner:latest jenkinsfile-runner --file Jenkinsfile
 
       - name: Trigger Jenkins Pipeline
         run: |
