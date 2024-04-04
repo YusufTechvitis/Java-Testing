@@ -1,0 +1,30 @@
+name: Trigger Jenkins Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test Jenkinsfile
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Validate Jenkinsfile
+        run: |
+          # Check if Jenkinsfile is valid
+          if ! docker run --rm -v $PWD:/workspace -w /workspace jenkins/jenkinsfile-runner:latest sh -c 'cat Jenkinsfile | jenkins-jenkinsfile-runner'; then
+            echo "ERROR: Jenkinsfile is not valid."
+            exit 1
+          fi
+
+      - name: Trigger Jenkins Pipeline
+        run: |
+          curl -X POST \
+            -u YusufRiyad:111e297342cff6b975e53e2c71e1a79f59 \
+            -d '' \
+            http://3.72.38.22:8080/job/RY/build
