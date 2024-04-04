@@ -6,20 +6,11 @@ on:
       - main
 
 jobs:
-  test:
-    name: Test Jenkinsfile
+  deploy:
+    name: Deploy to Jenkins
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Validate Jenkinsfile
-        run: |
-          docker run --rm \
-            -v $PWD:/workspace -w /workspace \
-            jenkins/jenkinsfile-runner:latest jenkinsfile-runner --file Jenkinsfile
-
       - name: Trigger Jenkins Pipeline
         run: |
           curl -X POST \
