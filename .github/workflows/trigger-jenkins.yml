@@ -39,6 +39,21 @@ jobs:
       - name: Pull Docker image onto the second instance
         run: docker pull yusufme3/yr-apache-image:latest
 
+      - name: Check if container is running
+        id: check_container
+        run: |
+          if docker ps -a --filter "name=yr-apache-image" --format "{{.Status}}" | grep -q "Up"; then
+            echo "::set-output name=container_running::true"
+          else
+            echo "::set-output name=container_running::false"
+          fi
+
+      - name: Stop and remove container if running
+        if: steps.check_container.outputs.container_running == 'true'
+        run: |
+          docker stop yr-apache-image
+          docker rm yr-apache-image
+
       - name: Trigger Jenkins Pipeline
         run: |
           curl -X POST \
