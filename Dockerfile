@@ -1,4 +1,4 @@
-# Use a base image with Apache already installed
+# Use a base image with Apache already installedd
 FROM httpd:latest
 
 # Set the working directory inside the container
