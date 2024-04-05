@@ -13,29 +13,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build and Push Docker image
-        uses: docker/build-push-action@v2
+      - name: Docker Login
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.YUSUFME3 }}
           password: ${{ secrets.YUSUFME3P }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
           repository: yusufme3/yr-apache-image
           tag_with_ref: true
 
-      - name: Create SSH directory for the second instance
+      - name: Create SSH directory
         run: mkdir -p ~/.ssh
 
-      - name: Write private key to file for the second instance
+      - name: Write private key to file
         run: echo "${{ secrets.YUSUFKEY }}" > ~/.ssh/RHY.pem
 
-      - name: Set permissions for private key file for the second instance
+      - name: Set permissions for private key file
         run: chmod 600 ~/.ssh/RHY.pem
 
-      - name: Update known_hosts file for the second instance
+      - name: Update known_hosts file
         run: ssh-keyscan -H 3.72.74.84 >> ~/.ssh/known_hosts
 
-      - name: SSH into the second instance
+      - name: SSH into the server
         run: ssh -i ~/.ssh/RHY.pem ubuntu@3.72.74.84
-
 
       - name: Trigger Jenkins Pipeline
         run: |
