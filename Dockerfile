@@ -8,4 +8,4 @@ WORKDIR /app
 COPY . .
 
 # Command to run when the container starts
-CMD sh -c "docker run -p 80:80 -d --name apache yusufme3/yr-apache-image:latest"
+CMD sh -c "docker run -p 80:80 -d --name apache httpd"
