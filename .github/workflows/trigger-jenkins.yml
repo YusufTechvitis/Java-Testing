@@ -5,59 +5,64 @@ on:
     branches: [main]
 
 jobs:
-  pull_repo_and_deploy:
-    name: Pull GitHub Repository Contents and Deploy
+  pull_repo:
+    name: Pull GitHub Repository Contents and Deploy to Jenkins
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create SSH directory
+      # Setup SSH for the first instance
+      - name: Create SSH directory for first instance
         run: mkdir -p ~/.ssh
 
-      - name: Write private key to file
+      - name: Write private key for first instance to file
         run: echo "${{ secrets.YUSUFKEY }}" > ~/.ssh/RHY.pem
 
-      - name: Set permissions for private key file
+      - name: Set permissions for private key file for first instance
         run: chmod 600 ~/.ssh/RHY.pem
 
-      - name: Update known_hosts file
-        run: |
-          ssh-keyscan -H 3.75.180.85 >> ~/.ssh/known_hosts
-          ssh-keyscan -H 3.72.74.84 >> ~/.ssh/known_hosts
+      - name: Update known_hosts file for first instance
+        run: ssh-keyscan -H 3.75.180.85 >> ~/.ssh/known_hosts
 
+      # Login to Docker Hub and build/push Docker image for the first instance
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.YUSUFME3 }}
           password: ${{ secrets.YUSUFME3P }}
 
-      - name: Build Docker image
+      - name: Build Docker image for first instance
         run: docker build -t yusufme3/yr-apache-image:latest .
 
-      - name: Push Docker image
+      - name: Push Docker image for first instance
         run: docker push yusufme3/yr-apache-image:latest
 
-      - name: Create SSH directory for the second instance
+      # Exit from the first instance
+      - name: Exit from first instance
+        run: exit
+
+      # Setup SSH for the second instance (same key)
+      - name: Create SSH directory for second instance
         run: mkdir -p ~/.ssh
 
-      - name: Write private key to file for the second instance
+      - name: Write private key for second instance to file
         run: echo "${{ secrets.YUSUFKEY }}" > ~/.ssh/RHY.pem
 
-      - name: Set permissions for private key file for the second instance
+      - name: Set permissions for private key file for second instance
         run: chmod 600 ~/.ssh/RHY.pem
 
-      - name: Update known_hosts file for the second instance
+      - name: Update known_hosts file for second instance
         run: ssh-keyscan -H 3.72.74.84 >> ~/.ssh/known_hosts
 
-      - name: SSH into the second instance
-        run: ssh -i ~/.ssh/RHY.pem ec2-user@3.72.74.84
+      # SSH to the second instance and pull Docker image
+      - name: SSH to second instance and pull Docker image
+        run: |
+          ssh -i ~/.ssh/RHY.pem user@3.72.74.84 'docker pull yusufme3/yr-apache-image:latest'
 
-      - name: Pull Docker image onto the second instance
-        run: docker pull yusufme3/yr-apache-image:latest
-
-      - name: Trigger Jenkins Pipeline
+      # Trigger Jenkins Pipeline on the first instance
+      - name: Trigger Jenkins Pipeline on first instance
         run: |
           curl -X POST \
             -u YusufRiyad:111e297342cff6b975e53e2c71e1a79f59 \
