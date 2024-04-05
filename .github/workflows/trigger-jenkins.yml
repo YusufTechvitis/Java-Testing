@@ -20,7 +20,7 @@ jobs:
           ssh-private-key: ${{ secrets.YUSUFKEY }}
 
       - name: Update known_hosts file for first instance
-        run: ssh-keyscan -H 3.75.180.85 >> $HOME/.ssh/known_hosts
+        run: ssh-keyscan -H 3.72.74.84 >> $HOME/.ssh/known_hosts
 
       # Login to Docker Hub and build/push Docker image for the first instance
       - name: Login to Docker Hub
@@ -38,6 +38,7 @@ jobs:
       # SSH to the second instance and pull Docker image
       - name: SSH to second instance and pull Docker image
         run: |
+          ssh-keyscan -H 3.72.74.84 >> $HOME/.ssh/known_hosts
           ssh user@3.72.74.84 'sudo docker pull yusufme3/yr-apache-image:latest'
 
       # Trigger Jenkins Pipeline on the first instance
