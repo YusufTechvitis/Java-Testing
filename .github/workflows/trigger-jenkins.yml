@@ -14,17 +14,13 @@ jobs:
         uses: actions/checkout@v2
 
       # Setup SSH for the first instance
-      - name: Create SSH directory for first instance
-        run: mkdir -p ~/.ssh
-
-      - name: Write private key for first instance to file
-        run: echo "${{ secrets.YUSUFKEY }}" > ~/.ssh/RHY.pem
-
-      - name: Set permissions for private key file for first instance
-        run: chmod 400 ~/.ssh/RHY.pem
+      - name: Setup SSH for first instance
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.YUSUFKEY }}
 
       - name: Update known_hosts file for first instance
-        run: ssh-keyscan -H 3.75.180.85 >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H 3.75.180.85 >> $HOME/.ssh/known_hosts
 
       # Login to Docker Hub and build/push Docker image for the first instance
       - name: Login to Docker Hub
@@ -39,23 +35,10 @@ jobs:
       - name: Push Docker image for first instance
         run: docker push yusufme3/yr-apache-image:latest
 
-      # Setup SSH for the second instance (same key)
-      - name: Create SSH directory for second instance
-        run: mkdir -p ~/.ssh
-
-      - name: Write private key for second instance to file
-        run: echo "${{ secrets.YUSUFKEY }}" > ~/.ssh/RHY.pem
-
-      - name: Set permissions for private key file for second instance
-        run: chmod 400 ~/.ssh/RHY.pem
-
-      - name: Update known_hosts file for second instance
-        run: ssh-keyscan -H 3.72.74.84 >> ~/.ssh/known_hosts
-
       # SSH to the second instance and pull Docker image
       - name: SSH to second instance and pull Docker image
         run: |
-          ssh -i ~/.ssh/RHY.pem user@3.72.74.84 'sudo docker pull yusufme3/yr-apache-image:latest'
+          ssh user@3.72.74.84 'sudo docker pull yusufme3/yr-apache-image:latest'
 
       # Trigger Jenkins Pipeline on the first instance
       - name: Trigger Jenkins Pipeline on first instance
