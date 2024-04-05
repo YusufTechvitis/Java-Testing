@@ -36,8 +36,10 @@ jobs:
       - name: SSH into the second instance
         run: ssh -i ~/.ssh/RHY.pem ubuntu@3.72.74.84
 
-      - name: Pull Docker image onto the second instance and run
-        run: docker run --rm -d -p 80:80 yusufme3/yr-apache-image:latest
+      - name: Stop and remove Apache Docker container
+        run: |
+          docker stop apache || true
+          docker rm apache || true
 
       - name: Trigger Jenkins Pipeline
         run: |
