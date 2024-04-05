@@ -13,22 +13,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Setup SSH for the first instance
-      - name: Create SSH directory for first instance
-        run: mkdir -p ~/.ssh
-
-      - name: Write private key for first instance to file
-        run: echo "${{ secrets.YUSUFKEY }}" > ~/.ssh/RHY.pem
-
-      - name: Set permissions for private key file for first instance
-        run: chmod 600 ~/.ssh/RHY.pem
-
-      - name: Update known_hosts file for first instance
-        run: ssh-keyscan -H 3.75.180.85 >> ~/.ssh/known_hosts
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.YUSUFKEY }}
 
       - name: SSH to the first instance
         run: |
-          ssh -i ~/.ssh/RHY.pem ubuntu@3.124.195.133 '
+          ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY ubuntu@3.124.195.133 '
 
       # Login to Docker Hub and build/push Docker image for the first instance
       - name: Login to Docker Hub
