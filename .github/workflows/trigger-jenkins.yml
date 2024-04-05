@@ -19,12 +19,11 @@ jobs:
           username: ${{ secrets.YUSUFME3 }}
           password: ${{ secrets.YUSUFME3P }}
 
-      - name: Build and Push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          repository: yusufme3/yr-apache-image:latest
-          tag_with_ref: true
+      - name: Build Docker image
+        run: docker build -t yusufme3/yr-apache-image:latest .
+
+      - name: Push Docker image
+        run: docker push yusufme3/yr-apache-image:latest
 
       - name: Create SSH directory
         run: mkdir -p ~/.ssh
