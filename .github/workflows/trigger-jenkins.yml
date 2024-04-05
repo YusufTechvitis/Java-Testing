@@ -6,43 +6,38 @@ on:
 
 jobs:
   pull_repo:
-    name: Pull GitHub Repository Contents and Deploy to Jenkins
+    name: Pull GitHub Repository Contents
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Setup SSH for the first instance
-      - name: Setup SSH for first instance
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.YUSUFKEY }}
+      - name: Create SSH directory
+        run: mkdir -p ~/.ssh
 
-      - name: Update known_hosts file for first instance
-        run: ssh-keyscan -H 3.72.74.84 >> $HOME/.ssh/known_hosts
+      - name: Write private key to file
+        run: echo "${{ secrets.YUSUFKEY }}" > ~/.ssh/RHY.pem
 
-      # Login to Docker Hub and build/push Docker image for the first instance
+      - name: Set permissions for private key file
+        run: chmod 600 ~/.ssh/RHY.pem
+
+      - name: Update known_hosts file
+        run: ssh-keyscan -H 3.75.180.85 >> ~/.ssh/known_hosts
+
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.YUSUFME3 }}
           password: ${{ secrets.YUSUFME3P }}
 
-      - name: Build Docker image for first instance
+      - name: Build Docker image
         run: docker build -t yusufme3/yr-apache-image:latest .
 
-      - name: Push Docker image for first instance
+      - name: Push Docker image
         run: docker push yusufme3/yr-apache-image:latest
 
-      # SSH to the second instance and pull Docker image
-      - name: SSH to second instance and pull Docker image
-        run: |
-          ssh-keyscan -H 3.72.74.84 >> $HOME/.ssh/known_hosts
-          ssh user@3.72.74.84 'sudo docker pull yusufme3/yr-apache-image:latest'
-
-      # Trigger Jenkins Pipeline on the first instance
-      - name: Trigger Jenkins Pipeline on first instance
+      - name: Trigger Jenkins Pipeline
         run: |
           curl -X POST \
             -u YusufRiyad:111e297342cff6b975e53e2c71e1a79f59 \
