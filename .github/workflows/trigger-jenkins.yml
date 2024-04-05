@@ -10,13 +10,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Setup SSH for the first instance
+      - name: Create SSH directory for first instance
+        run: mkdir -p ~/.ssh
+
+      - name: Write private key for first instance to file
+        run: echo "${{ secrets.YUSUFKEY }}" > ~/.ssh/RHY.pem
+
+      - name: Set permissions for private key file for first instance
+        run: chmod 600 ~/.ssh/RHY.pem
+
+      - name: Update known_hosts file for first instance
+        run: ssh-keyscan -H 3.75.180.85 >> ~/.ssh/known_hosts
+
       - name: SSH to the first instance
         run: |
           ssh -i ~/.ssh/RHY.pem ubuntu@3.124.195.133 '
-          mkdir -p ~/.ssh && echo "${{ secrets.YUSUFKEY }}" > ~/.ssh/RHY.pem && chmod 600 ~/.ssh/RHY.pem && ssh-keyscan -H 3.75.180.85 >> ~/.ssh/known_hosts && exit'
 
-      - name: Checkout code
-        uses: actions/checkout@v2
+      # Login to Docker Hub and build/push Docker image for the first instance
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.YUSUFME3 }}
+          password: ${{ secrets.YUSUFME3P }}
+
+      - name: Build Docker image for first instance
+        run: docker build -t yusufme3/yr-apache-image:latest .
+
+      - name: Push Docker image for first instance
+        run: docker push yusufme3/yr-apache-image:latest
+
+      # Exit from the first instance
+      - name: Exit from first instance
+        run: exit
 
       # Setup SSH for the second instance (same key)
       - name: Create SSH directory for second instance
@@ -43,4 +72,3 @@ jobs:
             -u YusufRiyad:111e297342cff6b975e53e2c71e1a79f59 \
             -d '' \
             http://3.75.180.85:8080/job/RY/build
-
