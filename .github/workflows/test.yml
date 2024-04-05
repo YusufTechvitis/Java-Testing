@@ -55,7 +55,7 @@ jobs:
       # SSH to the second instance and pull Docker image
       - name: SSH to second instance and pull Docker image
         run: |
-          ssh -i ~/.ssh/RHY.pem user@3.72.74.84 'docker pull yusufme3/yr-apache-image:latest'
+          ssh -i ~/.ssh/RHY.pem user@3.72.74.84 'sudo docker pull yusufme3/yr-apache-image:latest'
 
       # Trigger Jenkins Pipeline on the first instance
       - name: Trigger Jenkins Pipeline on first instance
