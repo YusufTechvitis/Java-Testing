@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Trigger Jenkins Pipeline
+      - name: Trigger Jenkins Pipeline 
         run: |
           curl -X POST \
             -u YusufRiyad:111e297342cff6b975e53e2c71e1a79f59 \
             -d '' \
-            http://3.75.180.84:8080/job/RY/build
+            http://3.75.180.85:8080/job/RY/build
