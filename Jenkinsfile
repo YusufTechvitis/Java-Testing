@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Dockering...'
                 sh 'docker stop apache && docker rm apache || true' // Stop and remove the existing container
-                sh 'docker run -p 80:80 -d --name apache httpd' // Run the Docker container
+                sh 'docker run -p 80:80 -d --name apache yusufme3/yr-apache-image' // Run the Docker container
             }
         }
     }
