@@ -31,10 +31,10 @@ jobs:
         run: chmod 600 ~/.ssh/RHY.pem
 
       - name: Update known_hosts file for the second instance
-        run: ssh-keyscan -H 3.75.180.85 >> ~/.ssh/known_hosts
+        run: ssh-keyscan -H 3.72.74.84 >> ~/.ssh/known_hosts
 
       - name: SSH into the second instance
-        run: ssh -i ~/.ssh/RHY.pem ubuntu@3.75.180.85
+        run: ssh -i ~/.ssh/RHY.pem ubuntu@3.72.74.84
 
 
       - name: Trigger Jenkins Pipeline
