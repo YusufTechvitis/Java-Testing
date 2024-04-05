@@ -1,11 +1,8 @@
-# Use a base image with a lightweight Linux distribution
-FROM alpine:latest
+# Use a base image with Apache already installed
+FROM httpd:latest
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /usr/local/apache2/htdocs
 
 # Copy the contents of your Java-Testing directory to the working directory in the container
 COPY . .
-
-# Command to run when the container starts
-CMD sh -c "docker run -p 80:80 -d --name apache httpd"
