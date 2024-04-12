@@ -1,4 +1,3 @@
-<!-- hello.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,87 +16,88 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
         header {
             background-color: #007bff;
             color: #fff;
             padding: 20px;
-            border-radius: 10px 10px 0 0;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
         header h1 {
             margin: 0;
-            font-size: 32px;
-            text-align: center;
         }
-        .info {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 0 0 10px 10px;
+        header p {
+            font-style: italic;
+            margin: 10px 0;
         }
-        .info p {
-            margin: 0;
-            line-height: 1.5;
-        }
-        form {
+        .search-form {
             margin-bottom: 20px;
         }
-        input[type="text"] {
+        .search-form input[type="text"] {
             padding: 10px;
             width: 70%;
             border: 1px solid #ccc;
             border-radius: 5px;
+            margin-right: 10px;
         }
-        button {
-            padding: 10px 20px;
+        .search-form button {
+            padding: 10px 15px;
             background-color: #007bff;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-        button:hover {
+        .search-form button:hover {
             background-color: #0056b3;
         }
+        .news-feed {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-gap: 20px;
+        }
         .article {
-            margin-bottom: 30px;
             background-color: #fff;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .article img {
             max-width: 100%;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            /* Lazy loading */
-            width: 100%;
-            height: auto;
-            transition: opacity 0.3s ease;
-            opacity: 0;
-        }
-        .article img.lazy-loaded {
-            opacity: 1;
+            border-radius: 5px;
         }
         .article h2 {
             margin-top: 0;
             color: #333;
-            font-size: 24px;
         }
         .article p {
             color: #666;
-            line-height: 1.5;
         }
         .article a {
             color: #007bff;
             text-decoration: none;
-            font-weight: bold;
         }
-        .article a:hover {
-            text-decoration: underline;
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        .pagination button:hover {
+            background-color: #0056b3;
+        }
+        .pagination .active {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -105,77 +105,45 @@
 
 <div class="container">
     <header>
-        <h1>News Feed</h1>
-        <p>Welcome to our news website. Stay updated with the latest news about Tesla and more!</p>
+        <h1>News Portal</h1>
+        <p>Your source for the latest news updates</p>
     </header>
 
-    <!-- Search form -->
-    <form action="{% url 'home' %}" method="get">
-        <input type="text" name="query" placeholder="Search...">
-        <button type="submit">Search</button>
-    </form>
+    <div class="search-form">
+        <input type="text" id="searchQuery" placeholder="Search...">
+        <button onclick="searchNews()">Search</button>
+    </div>
 
-    <!-- Display search query -->
-    {% if query %}
-        <h2>Search results for: "{{ query }}"</h2>
-    {% endif %}
-    
-    <div id="newsFeed">
-        {% if articles %}
-            {% for article in articles %}
-                <!-- Display articles here -->
-                <div class="article">
-                    <h2>{{ article.title }}</h2>
-                    <img class="lazyload" data-src="{{ article.urlToImage }}" alt="{{ article.title }}">
-                    <p>{{ article.description }}</p>
-                    <a href="{{ article.url }}" target="_blank">Read more</a>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No news articles available.</p>
+    <div class="news-feed">
+        {% for article in articles %}
+        <div class="article">
+            <h2>{{ article.title }}</h2>
+            <img src="{{ article.urlToImage }}" alt="{{ article.title }}">
+            <p>{{ article.description }}</p>
+            <a href="{{ article.url }}" target="_blank">Read more</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if page_range %}
+        {% for i in page_range %}
+        <button class="{% if i == current_page %}active{% endif %}" onclick="changePage({{ i }})">{{ i }}</button>
+        {% endfor %}
         {% endif %}
     </div>
 
-    <!-- Additional Information -->
-    <div class="info">
-        <h2>About Us</h2>
-        <p>We are dedicated to providing you with the latest and most accurate news updates. Our team works tirelessly to bring you relevant and informative content.</p>
-        <p>For any inquiries or feedback, please contact us at contact@example.com</p>
-    </div>
 </div>
 
 <script>
-    // Lazy loading images
-    document.addEventListener("DOMContentLoaded", function() {
-        var lazyloadImages = document.querySelectorAll("img.lazyload");
-        var lazyloadThrottleTimeout;
+    function searchNews() {
+        var searchQuery = document.getElementById('searchQuery').value;
+        window.location.href = "{% url 'home' %}?search=" + searchQuery;
+    }
 
-        function lazyload() {
-            if (lazyloadThrottleTimeout) {
-                clearTimeout(lazyloadThrottleTimeout);
-            }
-
-            lazyloadThrottleTimeout = setTimeout(function() {
-                var scrollTop = window.pageYOffset;
-                lazyloadImages.forEach(function(img) {
-                    if (img.offsetTop < (window.innerHeight + scrollTop)) {
-                        img.src = img.dataset.src;
-                        img.classList.remove('lazyload');
-                        img.classList.add('lazy-loaded');
-                    }
-                });
-                if (lazyloadImages.length === 0) {
-                    document.removeEventListener("scroll", lazyload);
-                    window.removeEventListener("resize", lazyload);
-                    window.removeEventListener("orientationChange", lazyload);
-                }
-            }, 20);
-        }
-
-        document.addEventListener("scroll", lazyload);
-        window.addEventListener("resize", lazyload);
-        window.addEventListener("orientationChange", lazyload);
-    });
+    function changePage(page) {
+        window.location.href = "{% url 'home' %}?page=" + page;
+    }
 </script>
 
 </body>
