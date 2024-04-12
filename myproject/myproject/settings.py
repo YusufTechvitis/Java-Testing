@@ -69,4 +69,4 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Define the root directory for collecting static files
-STATIC_ROOT = BASE_DIR / 'helloapp/static' 
+STATIC_ROOT = None
