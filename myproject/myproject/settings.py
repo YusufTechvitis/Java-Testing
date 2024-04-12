@@ -1,11 +1,8 @@
 from pathlib import Path
-import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-_8@^wm7b+$_7ec(_vxlb5e7$dgxu69+@++%2w9v*n51n^c!b@f'
-# Define the root directory for collecting static files
-STATIC_ROOT = BASE_DIR / 'staticfiles' 
 
 DEBUG = True
 
@@ -44,7 +41,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.static',  # Added for static files
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -71,10 +68,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Define the directories where static files will be stored
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+# Define the root directory for collecting static files
+STATIC_ROOT = BASE_DIR / 'staticfiles' 
