@@ -1,3 +1,4 @@
+<!-- hello.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,10 +45,23 @@
 <body>
 
 <div class="container">
-    <h1>Latest News By Yusuf</h1>
+    <h1>Latest News</h1>
+    
+    <!-- Search form -->
+    <form action="{% url 'home' %}" method="get">
+        <input type="text" name="query" placeholder="Search...">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Display search query -->
+    {% if query %}
+        <h2>Search results for: "{{ query }}"</h2>
+    {% endif %}
+    
     <div id="newsFeed">
         {% if articles %}
             {% for article in articles %}
+                <!-- Display articles here -->
                 <div class="article">
                     <h2>{{ article.title }}</h2>
                     <img src="{{ article.urlToImage }}" alt="{{ article.title }}">
@@ -63,4 +77,3 @@
 
 </body>
 </html>
-
