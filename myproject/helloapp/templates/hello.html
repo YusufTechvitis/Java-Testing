@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .article {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .article img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        .article h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .article p {
+            color: #666;
+        }
+        .article a {
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Latest News</h1>
+    <div id="newsFeed">
+        {% if articles %}
+            {% for article in articles %}
+                <div class="article">
+                    <h2>{{ article.title }}</h2>
+                    <img src="{{ article.urlToImage }}" alt="{{ article.title }}">
+                    <p>{{ article.description }}</p>
+                    <a href="{{ article.url }}" target="_blank">Read more</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No news articles available.</p>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
+
