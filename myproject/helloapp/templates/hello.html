@@ -106,6 +106,9 @@
         .article a:hover {
             text-decoration: underline;
         }
+        .add-news-form {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -114,8 +117,17 @@
     <header>
         <h1>News Feed</h1>
         <p>Welcome to our news website. Stay updated with the latest news about Tesla and more!</p>
-        <button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button> <!-- Added add news button with Font Awesome icon -->
+        <button onclick="toggleAddForm()"><i class="fas fa-plus"></i> Add News</button> <!-- Added add news button with Font Awesome icon -->
     </header>
+
+    <!-- Add News Form -->
+    <form id="addNewsForm" class="add-news-form" onsubmit="addNews(event)">
+        <input type="text" id="newsTitle" placeholder="Title" required>
+        <input type="text" id="newsImageUrl" placeholder="Image URL" required>
+        <input type="text" id="newsDescription" placeholder="Description" required>
+        <input type="text" id="newsUrl" placeholder="News URL" required>
+        <button type="submit">Add News</button>
+    </form>
 
     <!-- Search form -->
     <form action="{% url 'home' %}" method="get">
@@ -186,9 +198,33 @@
         window.addEventListener("orientationChange", lazyload);
     });
 
-    function addNews() {
-        // Here you can implement the logic to add news
-        alert("Add news functionality will be implemented soon!");
+    function toggleAddForm() {
+        var addForm = document.getElementById("addNewsForm");
+        addForm.classList.toggle("add-news-form");
+    }
+
+    function addNews(event) {
+        event.preventDefault();
+        var newsTitle = document.getElementById("newsTitle").value;
+        var newsImageUrl = document.getElementById("newsImageUrl").value;
+        var newsDescription = document.getElementById("newsDescription").value;
+        var newsUrl = document.getElementById("newsUrl").value;
+
+        // Here you can implement the logic to add news using the provided information
+        // For now, let's just log the information
+        console.log("Title:", newsTitle);
+        console.log("Image URL:", newsImageUrl);
+        console.log("Description:", newsDescription);
+        console.log("News URL:", newsUrl);
+
+        // Clear input fields after adding news
+        document.getElementById("newsTitle").value = "";
+        document.getElementById("newsImageUrl").value = "";
+        document.getElementById("newsDescription").value = "";
+        document.getElementById("newsUrl").value = "";
+
+        // Hide the add news form
+        toggleAddForm();
     }
 
     function deleteNews(element) {
