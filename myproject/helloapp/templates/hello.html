@@ -73,6 +73,14 @@
             max-width: 100%;
             border-radius: 10px;
             margin-bottom: 10px;
+            /* Lazy loading */
+            width: 100%;
+            height: auto;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        .article img.lazy-loaded {
+            opacity: 1;
         }
         .article h2 {
             margin-top: 0;
@@ -118,7 +126,7 @@
                 <!-- Display articles here -->
                 <div class="article">
                     <h2>{{ article.title }}</h2>
-                    <img src="{{ article.urlToImage }}" alt="{{ article.title }}">
+                    <img class="lazyload" data-src="{{ article.urlToImage }}" alt="{{ article.title }}">
                     <p>{{ article.description }}</p>
                     <a href="{{ article.url }}" target="_blank">Read more</a>
                 </div>
@@ -135,6 +143,40 @@
         <p>For any inquiries or feedback, please contact us at contact@example.com</p>
     </div>
 </div>
+
+<script>
+    // Lazy loading images
+    document.addEventListener("DOMContentLoaded", function() {
+        var lazyloadImages = document.querySelectorAll("img.lazyload");
+        var lazyloadThrottleTimeout;
+
+        function lazyload() {
+            if (lazyloadThrottleTimeout) {
+                clearTimeout(lazyloadThrottleTimeout);
+            }
+
+            lazyloadThrottleTimeout = setTimeout(function() {
+                var scrollTop = window.pageYOffset;
+                lazyloadImages.forEach(function(img) {
+                    if (img.offsetTop < (window.innerHeight + scrollTop)) {
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazyload');
+                        img.classList.add('lazy-loaded');
+                    }
+                });
+                if (lazyloadImages.length === 0) {
+                    document.removeEventListener("scroll", lazyload);
+                    window.removeEventListener("resize", lazyload);
+                    window.removeEventListener("orientationChange", lazyload);
+                }
+            }, 20);
+        }
+
+        document.addEventListener("scroll", lazyload);
+        window.addEventListener("resize", lazyload);
+        window.addEventListener("orientationChange", lazyload);
+    });
+</script>
 
 </body>
 </html>
