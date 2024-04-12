@@ -170,10 +170,11 @@
                 {% if forloop.counter|divisibleby:10 %}
                     <div class="pagination">
                         {% if forloop.counter0 == 0 %}
-                            <a class="page-link" href="?page=1">1</a>
-                        {% else %}
-                            <a class="page-link" href="?page={{ forloop.counter0 // 10 + 1 }}">{{ forloop.counter0 // 10 + 1 }}</a>
-                        {% endif %}
+                        <a class="page-link" href="?page=1">1</a>
+                    {% else %}
+                        <a class="page-link" href="?page={{ forloop.counter0|div:10|add:1 }}">{{ forloop.counter0|div:10|add:1 }}</a>
+                    {% endif %}
+                    
                     </div>
                 {% endif %}
             {% endfor %}
