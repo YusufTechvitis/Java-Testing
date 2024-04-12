@@ -1,4 +1,3 @@
-<!-- hello.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,6 +67,13 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative; /* Added for positioning delete icon */
+        }
+        .delete-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
         }
         .article img {
             max-width: 100%;
@@ -107,6 +113,7 @@
     <header>
         <h1>News Feed</h1>
         <p>Welcome to our news website. Stay updated with the latest news about Tesla and more!</p>
+        <button onclick="addNews()">Add News</button> <!-- Added add news button -->
     </header>
 
     <!-- Search form -->
@@ -125,8 +132,9 @@
             {% for article in articles %}
                 <!-- Display articles here -->
                 <div class="article">
-                    <h2>{{ article.title }}</h2>
                     <img class="lazyload" data-src="{{ article.urlToImage }}" alt="{{ article.title }}">
+                    <span class="delete-icon" onclick="deleteNews(this)">❌</span> <!-- Added delete icon -->
+                    <h2>{{ article.title }}</h2>
                     <p>{{ article.description }}</p>
                     <a href="{{ article.url }}" target="_blank">Read more</a>
                 </div>
@@ -176,6 +184,16 @@
         window.addEventListener("resize", lazyload);
         window.addEventListener("orientationChange", lazyload);
     });
+
+    function addNews() {
+        // You can implement the logic to add news here
+        alert("Add news functionality will be implemented soon!");
+    }
+
+    function deleteNews(element) {
+        // You can implement the logic to delete news here
+        element.parentNode.remove();
+    }
 </script>
 
 </body>
