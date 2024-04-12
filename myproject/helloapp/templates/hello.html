@@ -109,6 +109,22 @@
         .add-news-form {
             display: none;
         }
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .page-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            margin-right: 5px;
+            text-decoration: none;
+        }
+        .page-link:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -151,6 +167,15 @@
                     <p>{{ article.description }}</p>
                     <a href="{{ article.url }}" target="_blank">Read more</a>
                 </div>
+                {% if forloop.counter|divisibleby:10 %}
+                    <div class="pagination">
+                        {% if forloop.counter0 == 0 %}
+                            <a class="page-link" href="?page=1">1</a>
+                        {% else %}
+                            <a class="page-link" href="?page={{ forloop.counter0 // 10 + 1 }}">{{ forloop.counter0 // 10 + 1 }}</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endfor %}
         {% else %}
             <p>No news articles available.</p>
@@ -198,11 +223,13 @@
         window.addEventListener("orientationChange", lazyload);
     });
 
+    // Toggle Add News Form
     function toggleAddForm() {
         var addForm = document.getElementById("addNewsForm");
         addForm.classList.toggle("add-news-form");
     }
 
+    // Add News Function
     function addNews(event) {
         event.preventDefault();
         var newsTitle = document.getElementById("newsTitle").value;
@@ -210,12 +237,35 @@
         var newsDescription = document.getElementById("newsDescription").value;
         var newsUrl = document.getElementById("newsUrl").value;
 
-        // Here you can implement the logic to add news using the provided information
-        // For now, let's just log the information
-        console.log("Title:", newsTitle);
-        console.log("Image URL:", newsImageUrl);
-        console.log("Description:", newsDescription);
-        console.log("News URL:", newsUrl);
+        // Create new article element
+        var newArticle = document.createElement("div");
+        newArticle.classList.add("article");
+        var img = document.createElement("img");
+        img.src = newsImageUrl;
+        img.classList.add("lazyload");
+        var deleteIcon = document.createElement("span");
+        deleteIcon.classList.add("delete-icon");
+        deleteIcon.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        deleteIcon.addEventListener("click", function() {
+            deleteNews(this);
+        });
+        var h2 = document.createElement("h2");
+        h2.textContent = newsTitle;
+        var p = document.createElement("p");
+        p.textContent = newsDescription;
+        var a = document.createElement("a");
+        a.href = newsUrl;
+        a.target = "_blank";
+        a.textContent = "Read more";
+        newArticle.appendChild(img);
+        newArticle.appendChild(deleteIcon);
+        newArticle.appendChild(h2);
+        newArticle.appendChild(p);
+        newArticle.appendChild(a);
+
+        // Append new article to newsFeed
+        var newsFeed = document.getElementById("newsFeed");
+        newsFeed.appendChild(newArticle);
 
         // Clear input fields after adding news
         document.getElementById("newsTitle").value = "";
@@ -227,8 +277,8 @@
         toggleAddForm();
     }
 
+    // Delete News Function
     function deleteNews(element) {
-        // Here you can implement the logic to delete news
         element.parentNode.remove();
     }
 </script>
