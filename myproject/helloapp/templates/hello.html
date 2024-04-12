@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Feed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -113,7 +114,7 @@
     <header>
         <h1>News Feed</h1>
         <p>Welcome to our news website. Stay updated with the latest news about Tesla and more!</p>
-        <button onclick="addNews()">Add News</button> <!-- Added add news button -->
+        <button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button> <!-- Added add news button with Font Awesome icon -->
     </header>
 
     <!-- Search form -->
@@ -133,7 +134,7 @@
                 <!-- Display articles here -->
                 <div class="article">
                     <img class="lazyload" data-src="{{ article.urlToImage }}" alt="{{ article.title }}">
-                    <span class="delete-icon" onclick="deleteNews(this)">❌</span> <!-- Added delete icon -->
+                    <span class="delete-icon" onclick="deleteNews(this)"><i class="fas fa-trash-alt"></i></span> <!-- Changed delete icon to trash icon -->
                     <h2>{{ article.title }}</h2>
                     <p>{{ article.description }}</p>
                     <a href="{{ article.url }}" target="_blank">Read more</a>
@@ -186,12 +187,12 @@
     });
 
     function addNews() {
-        // You can implement the logic to add news here
+        // Here you can implement the logic to add news
         alert("Add news functionality will be implemented soon!");
     }
 
     function deleteNews(element) {
-        // You can implement the logic to delete news here
+        // Here you can implement the logic to delete news
         element.parentNode.remove();
     }
 </script>
