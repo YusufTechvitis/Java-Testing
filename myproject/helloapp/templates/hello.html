@@ -158,30 +158,25 @@
     
     <div id="newsFeed">
         {% if articles %}
-            {% for article in articles %}
-                <!-- Display articles here -->
-                <div class="article">
-                    <img class="lazyload" data-src="{{ article.urlToImage }}" alt="{{ article.title }}">
-                    <span class="delete-icon" onclick="deleteNews(this)"><i class="fas fa-trash-alt"></i></span> <!-- Changed delete icon to trash icon -->
-                    <h2>{{ article.title }}</h2>
-                    <p>{{ article.description }}</p>
-                    <a href="{{ article.url }}" target="_blank">Read more</a>
-                </div>
-                {% if forloop.counter0|divisibleby:10 %}
+        {% for article in articles %}
+            <!-- Display articles here -->
+            <div class="article">
+                <img class="lazyload" data-src="{{ article.urlToImage }}" alt="{{ article.title }}">
+                <span class="delete-icon" onclick="deleteNews(this)"><i class="fas fa-trash-alt"></i></span> <!-- Changed delete icon to trash icon -->
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.description }}</p>
+                <a href="{{ article.url }}" target="_blank">Read more</a>
+            </div>
+            {% if forloop.counter0|divisibleby:10 %}
                 <div class="pagination">
-                    {% if forloop.counter0 == 0 %}
-                        <a class="page-link" href="?page=1">1</a>
-                    {% else %}
-                        {% with page_num=forloop.counter0 // 10 + 1 %}
-                            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
-                        {% endwith %}
-                    {% endif %}
+                    <a class="page-link" href="?page={{ forloop.counter0 // 10 + 1 }}">{{ forloop.counter0 // 10 + 1 }}</a>
                 </div>
             {% endif %}
-            {% endfor %}
-        {% else %}
-            <p>No news articles available.</p>
-        {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>No news articles available.</p>
+    {% endif %}
+    
     </div>
 
     <!-- Additional Information -->
